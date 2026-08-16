@@ -1,0 +1,28 @@
+# Only needed when the WHOLE project folder sits inside public_html.
+# If the hosting document root already points at /public, delete this file.
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Serve everything out of /public without showing it in the address bar.
+  RewriteCond %{REQUEST_URI} !^/public/
+  RewriteRule ^$ public/index.php [L]
+
+  RewriteCond %{REQUEST_URI} !^/public/
+  RewriteCond %{DOCUMENT_ROOT}/public/$1 -f [OR]
+  RewriteCond %{DOCUMENT_ROOT}/public/$1 -d
+  RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+# The database is never downloadable, wherever it ends up.
+<FilesMatch "\.(sqlite|sqlite-wal|sqlite-shm|db|log)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+Options -Indexes

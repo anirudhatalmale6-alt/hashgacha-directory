@@ -1,0 +1,12 @@
+# Generated at runtime
+data/*.sqlite
+data/*.sqlite-wal
+data/*.sqlite-shm
+config.php
+
+# Uploaded and generated logo files
+public/uploads/*
+!public/uploads/.htaccess
+
+*.log
+.DS_Store
