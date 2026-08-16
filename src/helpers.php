@@ -110,11 +110,18 @@ function asset_url(string $relative): string
     return $relative . '?v=' . APP_VERSION;
 }
 
-/** All businesses shown on the public page. */
+/**
+ * All businesses shown on the public page, in the order chosen in the admin:
+ * alphabetical by name, or the manual drag order.
+ */
 function active_businesses(): array
 {
+    $order = setting('business_order') === 'manual'
+        ? 'sort_order ASC, name COLLATE NOCASE ASC'
+        : 'name COLLATE NOCASE ASC';
+
     return db()->query(
-        'SELECT * FROM businesses WHERE is_active = 1 ORDER BY sort_order ASC, name COLLATE NOCASE ASC'
+        'SELECT * FROM businesses WHERE is_active = 1 ORDER BY ' . $order
     )->fetchAll();
 }
 
@@ -152,6 +159,9 @@ function business_payload(array $row): array
         'whatsappHref' => $waDigits !== '' ? 'https://wa.me/' . $waDigits : '',
         'email'       => (string) $row['email'],
         'emailHref'   => $row['email'] !== '' ? 'mailto:' . $row['email'] : '',
+        // True when calls, texts and WhatsApp all reach the same number, so the
+        // popup shows one row instead of repeating it.
+        'oneNumber'   => $telDigits !== '' && $telDigits === $waDigits,
         'website'     => pretty_url($website),
         'websiteHref' => $website,
         'logo'        => $row['logo'] !== '' ? 'uploads/' . $row['logo'] : '',

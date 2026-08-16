@@ -13,6 +13,8 @@ $formUrl    = normalize_url($s['google_form_url']);
 $waDigits   = intl_digits($s['contact_whatsapp']);
 $telDigits  = intl_digits($s['contact_phone']);
 $hasLogo    = $s['logo'] !== '' && is_file(UPLOAD_DIR . '/' . $s['logo']);
+// One number reached by call, text and WhatsApp is shown as a single card.
+$sameNumber = $telDigits !== '' && $telDigits === $waDigits;
 ?>
 <!doctype html>
 <html lang="en">
@@ -158,37 +160,54 @@ $hasLogo    = $s['logo'] !== '' && is_file(UPLOAD_DIR . '/' . $s['logo']);
       </div>
 
       <?php if (trim($s['contact_name']) !== ''): ?>
-        <p class="contact-person">
+        <div class="contact-person">
           <strong><?= e($s['contact_name']) ?></strong>
           <?php if (trim($s['contact_role']) !== ''): ?>
             <span><?= e($s['contact_role']) ?></span>
           <?php endif; ?>
-        </p>
+        </div>
       <?php endif; ?>
 
       <div class="contact-grid">
-        <?php if ($s['contact_phone'] !== ''): ?>
-          <a class="contact-card" href="tel:+<?= e($telDigits) ?>">
+        <?php if ($sameNumber): ?>
+          <?php /* One number for calls, texts and WhatsApp — one card, two actions. */ ?>
+          <div class="contact-card contact-card-combo">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.58 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.46.57 3.6a1 1 0 0 1-.25 1z"/></svg>
-            <span class="contact-label">Call or text</span>
+            <span class="contact-label">Call &middot; Text &middot; WhatsApp</span>
             <span class="contact-value"><?= e($s['contact_phone']) ?></span>
-          </a>
-        <?php endif; ?>
+            <span class="contact-actions">
+              <a class="contact-action" href="tel:+<?= e($telDigits) ?>">Call</a>
+              <a class="contact-action is-wa" href="https://wa.me/<?= e($waDigits) ?>" target="_blank" rel="noopener">WhatsApp</a>
+            </span>
+          </div>
+        <?php else: ?>
+          <?php if ($telDigits !== ''): ?>
+            <a class="contact-card" href="tel:+<?= e($telDigits) ?>">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.58 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.46.57 3.6a1 1 0 0 1-.25 1z"/></svg>
+              <span class="contact-label">Call or text</span>
+              <span class="contact-value"><?= e($s['contact_phone']) ?></span>
+            </a>
+          <?php endif; ?>
 
-        <?php if ($waDigits !== ''): ?>
-          <a class="contact-card" href="https://wa.me/<?= e($waDigits) ?>" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.26A10 10 0 1 0 12 2zm5.1 13.9c-.22.6-1.3 1.18-1.8 1.22-.46.05-1.05.07-1.7-.1a15.4 15.4 0 0 1-6.6-5.5c-.5-.75-.83-1.6-.83-2.4 0-.8.42-1.2.57-1.36a.86.86 0 0 1 .62-.28h.44c.14 0 .33-.05.52.4l.7 1.7c.06.12.1.27.02.43l-.28.44-.4.44c-.13.13-.27.27-.12.53.15.25.66 1.1 1.42 1.77.97.87 1.8 1.14 2.05 1.27.26.13.4.1.55-.06l.8-.93c.18-.22.34-.17.56-.1l1.6.76c.24.1.4.16.46.25.06.1.06.55-.16 1.15z"/></svg>
-            <span class="contact-label">WhatsApp</span>
-            <span class="contact-value"><?= e($s['contact_whatsapp']) ?></span>
-          </a>
+          <?php if ($waDigits !== ''): ?>
+            <a class="contact-card" href="https://wa.me/<?= e($waDigits) ?>" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.26A10 10 0 1 0 12 2zm5.1 13.9c-.22.6-1.3 1.18-1.8 1.22-.46.05-1.05.07-1.7-.1a15.4 15.4 0 0 1-6.6-5.5c-.5-.75-.83-1.6-.83-2.4 0-.8.42-1.2.57-1.36a.86.86 0 0 1 .62-.28h.44c.14 0 .33-.05.52.4l.7 1.7c.06.12.1.27.02.43l-.28.44-.4.44c-.13.13-.27.27-.12.53.15.25.66 1.1 1.42 1.77.97.87 1.8 1.14 2.05 1.27.26.13.4.1.55-.06l.8-.93c.18-.22.34-.17.56-.1l1.6.76c.24.1.4.16.46.25.06.1.06.55-.16 1.15z"/></svg>
+              <span class="contact-label">WhatsApp</span>
+              <span class="contact-value"><?= e($s['contact_whatsapp']) ?></span>
+            </a>
+          <?php endif; ?>
         <?php endif; ?>
 
         <?php if ($s['contact_email'] !== ''): ?>
-          <a class="contact-card" href="mailto:<?= e($s['contact_email']) ?>">
+          <div class="contact-card contact-card-combo">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm9 7.2L4.6 7H4v1l8 5.6L20 8V7h-.6z"/></svg>
             <span class="contact-label">Email</span>
             <span class="contact-value"><?= e($s['contact_email']) ?></span>
-          </a>
+            <span class="contact-actions">
+              <a class="contact-action" href="mailto:<?= e($s['contact_email']) ?>">Send email</a>
+              <button class="contact-action" type="button" data-copy="<?= e($s['contact_email']) ?>">Copy</button>
+            </span>
+          </div>
         <?php endif; ?>
 
         <?php if ($s['contact_address'] !== ''): ?>

@@ -44,7 +44,7 @@ function install_logo(string $file, string $logoDir): string
 
 $settings = [
     'site_title'       => 'Ramat Eshkol Kosher',
-    'logo'             => install_logo('rek-logo-gold.png', $logoDir),
+    'logo'             => install_logo('rek-logo-black.png', $logoDir),
     'brand_initials'   => 'REK',
     'nav_home'         => 'Home',
     'nav_about'        => 'About',
@@ -64,6 +64,7 @@ $settings = [
     'contact_phone'    => '053-384-2614',
     'contact_whatsapp' => '053-384-2614',
     'contact_email'    => 'eshkolkosher@gmail.com',
+    'business_order'   => 'alpha',
     'dial_code'        => '972',
     'theme_accent'     => '#b29228',
     'theme_button'     => '#2a6a9a',
@@ -113,6 +114,54 @@ $businesses = [
         'email'    => 'thechallery@gmail.com',
         'website'  => 'https://thechallery.com',
         'logo'     => 'biz-challery.png',
+    ],
+    [
+        'name'     => 'Cup Of Cake Israel',
+        'category' => '',
+        'phone'    => '053-419-8279',
+        'whatsapp' => '053-419-8279',
+        'email'    => 'cupofcakeisrael@gmail.com',
+        'website'  => '',
+        'logo'     => 'biz-cup-of-cake.png',
+    ],
+    [
+        'name'     => 'Exclusive Catering',
+        'category' => '',
+        'phone'    => '053-413-6719',
+        'whatsapp' => '',
+        'email'    => 'atfrankel1@gmail.com',
+        'website'  => 'https://glattcooking.com',
+        'logo'     => 'biz-exclusive-catering.png',
+    ],
+    [
+        'name'     => 'POP JLM',
+        'category' => '',
+        'phone'    => '055-334-8059',
+        // 929 is a New York area code, so it carries its own country code.
+        'whatsapp' => '+1 929-753-9587',
+        'email'    => 'eliherman1999@gmail.com',
+        'website'  => '',
+        'logo'     => 'biz-pops-jlm.png',
+    ],
+    [
+        'name'     => 'Scaled',
+        'category' => '',
+        'phone'    => '058-733-4655',
+        'whatsapp' => '+972 53-362-4820',
+        'email'    => 'leahamsel101@gmail.com',
+        'website'  => '',
+        'logo'     => 'biz-scaled.png',
+    ],
+    [
+        // Number read off the logo artwork — waiting on the client to confirm
+        // it and supply an email and website.
+        'name'     => 'The Shalosh Seudos Spot',
+        'category' => '',
+        'phone'    => '055-333-8650',
+        'whatsapp' => '055-333-8650',
+        'email'    => '',
+        'website'  => '',
+        'logo'     => 'biz-shalosh-seudos.png',
     ],
     [
         'name'     => 'Debbie Levy Catering',

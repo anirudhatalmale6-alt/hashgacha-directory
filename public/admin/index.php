@@ -30,6 +30,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         redirect('index.php');
     }
 
+    if ($action === 'order_mode') {
+        $mode = ($_POST['business_order'] ?? '') === 'manual' ? 'manual' : 'alpha';
+        save_setting('business_order', $mode);
+        flash($mode === 'alpha'
+            ? 'Businesses are now listed in alphabetical order.'
+            : 'Businesses are now listed in your own order — drag the rows to change it.');
+        redirect('index.php');
+    }
+
     if ($action === 'reorder') {
         $order = $_POST['order'] ?? [];
         if (is_array($order)) {
@@ -43,7 +52,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$rows = db()->query('SELECT * FROM businesses ORDER BY sort_order ASC, name COLLATE NOCASE ASC')->fetchAll();
+$alphabetical = setting('business_order') !== 'manual';
+
+// Show the admin table the same way the website will show the grid.
+$rows = db()->query(
+    'SELECT * FROM businesses ORDER BY ' .
+    ($alphabetical ? 'name COLLATE NOCASE ASC' : 'sort_order ASC, name COLLATE NOCASE ASC')
+)->fetchAll();
+
 $activeCount = 0;
 foreach ($rows as $row) {
     if ((int) $row['is_active'] === 1) {
@@ -71,15 +87,30 @@ require __DIR__ . '/layout.php';
   </div>
 <?php else: ?>
 
+  <form method="post" class="a-order-mode">
+    <?= csrf_field() ?>
+    <input type="hidden" name="action" value="order_mode">
+    <span class="a-order-label">Order on the website</span>
+    <label class="a-check">
+      <input type="radio" name="business_order" value="alpha" <?= $alphabetical ? 'checked' : '' ?> onchange="this.form.submit()">
+      <span>A–Z by name</span>
+    </label>
+    <label class="a-check">
+      <input type="radio" name="business_order" value="manual" <?= $alphabetical ? '' : 'checked' ?> onchange="this.form.submit()">
+      <span>My own order (drag the rows)</span>
+    </label>
+    <noscript><button class="a-btn a-btn-tiny" type="submit">Apply</button></noscript>
+  </form>
+
   <form method="post" id="orderForm">
     <?= csrf_field() ?>
     <input type="hidden" name="action" value="reorder">
 
     <div class="a-card">
-      <table class="a-table" id="bizTable">
+      <table class="a-table" id="bizTable"<?= $alphabetical ? ' data-locked="1"' : '' ?>>
         <thead>
           <tr>
-            <th class="a-col-drag" aria-label="Reorder"></th>
+            <?php if (!$alphabetical): ?><th class="a-col-drag" aria-label="Reorder"></th><?php endif; ?>
             <th class="a-col-logo">Logo</th>
             <th>Business</th>
             <th class="a-hide-sm">Contact</th>
@@ -89,11 +120,13 @@ require __DIR__ . '/layout.php';
         </thead>
         <tbody>
         <?php foreach ($rows as $row): ?>
-          <tr data-id="<?= (int) $row['id'] ?>" draggable="true">
-            <td class="a-col-drag">
-              <span class="a-drag" title="Drag to reorder">⋮⋮</span>
-              <input type="hidden" name="order[]" value="<?= (int) $row['id'] ?>">
-            </td>
+          <tr data-id="<?= (int) $row['id'] ?>"<?= $alphabetical ? '' : ' draggable="true"' ?>>
+            <?php if (!$alphabetical): ?>
+              <td class="a-col-drag">
+                <span class="a-drag" title="Drag to reorder">⋮⋮</span>
+                <input type="hidden" name="order[]" value="<?= (int) $row['id'] ?>">
+              </td>
+            <?php endif; ?>
             <td>
               <div class="a-thumb">
                 <?php if ($row['logo'] !== '' && is_file(UPLOAD_DIR . '/' . $row['logo'])): ?>

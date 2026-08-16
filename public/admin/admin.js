@@ -39,7 +39,7 @@
   var table = document.getElementById('bizTable');
   var bar = document.getElementById('orderBar');
 
-  if (table) {
+  if (table && !table.hasAttribute('data-locked')) {
     var tbody = table.querySelector('tbody');
     var dragged = null;
 

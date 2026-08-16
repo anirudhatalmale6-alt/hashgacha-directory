@@ -353,6 +353,26 @@ a { color: var(--a-accent); }
 .a-logo-row { display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; }
 .a-logo-controls { display: flex; flex-direction: column; gap: 12px; min-width: 220px; }
 
+.a-order-mode {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  background: #fff;
+  border: 1px solid var(--a-line);
+  border-radius: var(--a-radius);
+}
+.a-order-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--a-ink-3);
+}
+.a-order-mode .a-check { font-size: 13.5px; }
+
 .a-empty {
   background: #fff;
   border: 1px dashed #ccd4df;

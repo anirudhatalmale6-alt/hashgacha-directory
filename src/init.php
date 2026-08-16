@@ -111,6 +111,7 @@ function default_settings(): array
         'contact_hours'     => '',
         'footer_note'       => '',
         'show_search'       => '1',
+        'business_order'    => 'alpha',
         'dial_code'         => '972',
         'theme_accent'      => '#b29228',
         'theme_button'      => '#2a6a9a',
