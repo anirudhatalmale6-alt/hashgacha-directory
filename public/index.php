@@ -75,9 +75,6 @@ $hasLogo    = $s['logo'] !== '' && is_file(UPLOAD_DIR . '/' . $s['logo']);
 
   <section class="section section-about" id="about">
     <div class="wrap about-inner">
-      <?php if (mb_strtolower(trim($s['nav_about'])) !== mb_strtolower(trim($s['about_title']))): ?>
-        <p class="eyebrow"><?= e($s['nav_about']) ?></p>
-      <?php endif; ?>
       <h2><?= e($s['about_title']) ?></h2>
       <div class="prose"><?= paragraphs($s['about_text']) ?></div>
 
