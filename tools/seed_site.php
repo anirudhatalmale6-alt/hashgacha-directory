@@ -96,6 +96,25 @@ $businesses = [
         'logo'     => 'biz-burnt.png',
     ],
     [
+        'name'     => 'The LoxSmith',
+        'category' => '',
+        'phone'    => '055-338-1191',
+        // NYC area code — written with a + so it is never given the Israeli code.
+        'whatsapp' => '+1 718-645-6368',
+        'email'    => 'theloxsmithisrael@gmail.com',
+        'website'  => 'https://theloxsmithisrael.com',
+        'logo'     => 'biz-loxsmith.png',
+    ],
+    [
+        'name'     => 'The Challery',
+        'category' => '',
+        'phone'    => '058-320-4637',
+        'whatsapp' => '053-711-5976',
+        'email'    => 'thechallery@gmail.com',
+        'website'  => 'https://thechallery.com',
+        'logo'     => 'biz-challery.png',
+    ],
+    [
         'name'     => 'Debbie Levy Catering',
         'category' => '',
         'phone'    => '052-761-0093',
