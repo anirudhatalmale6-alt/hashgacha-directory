@@ -10,20 +10,25 @@ $categories = business_categories();
 $payload    = array_map('business_payload', $businesses);
 $showSearch = $s['show_search'] === '1' && count($businesses) > 5;
 $formUrl    = normalize_url($s['google_form_url']);
-$waDigits   = phone_digits($s['contact_whatsapp']);
+$waDigits   = intl_digits($s['contact_whatsapp']);
+$telDigits  = intl_digits($s['contact_phone']);
+$hasLogo    = $s['logo'] !== '' && is_file(UPLOAD_DIR . '/' . $s['logo']);
 ?>
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title><?= e($s['site_title']) ?><?= $s['site_tagline'] !== '' ? ' — ' . e($s['site_tagline']) : '' ?></title>
-<meta name="description" content="<?= e(mb_substr(strip_tags($s['hero_subheading']), 0, 160)) ?>">
+<title><?= e($s['site_title']) ?></title>
+<meta name="description" content="<?= e(mb_substr(trim(preg_replace('/\s+/', ' ', strip_tags($s['about_text'])) ?? ''), 0, 160)) ?>">
+<?php if ($hasLogo): ?>
+  <link rel="icon" href="<?= e('uploads/' . $s['logo']) ?>">
+<?php endif; ?>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="<?= asset_url('assets/style.css') ?>">
-<style>:root{--accent:<?= e($s['theme_accent'] ?: '#1f4b8e') ?>;}</style>
+<style>:root{--accent:<?= e($s['theme_accent'] ?: '#b29228') ?>;--button:<?= e($s['theme_button'] ?: '#2a6a9a') ?>;}</style>
 </head>
 <body>
 
@@ -31,25 +36,13 @@ $waDigits   = phone_digits($s['contact_whatsapp']);
 
 <header class="topbar" id="topbar">
   <div class="wrap topbar-inner">
-    <a class="brand" href="#top">
-      <?php if ($s['logo'] !== '' && is_file(UPLOAD_DIR . '/' . $s['logo'])): ?>
-        <img src="<?= e('uploads/' . $s['logo']) ?>" alt="<?= e($s['site_title']) ?>">
-      <?php else: ?>
-        <span class="brand-mark" aria-hidden="true"><?= e($s['brand_initials'] ?: 'H') ?></span>
-      <?php endif; ?>
-      <span class="brand-text">
-        <span class="brand-name"><?= e($s['site_title']) ?></span>
-        <?php if ($s['site_tagline'] !== ''): ?>
-          <span class="brand-tag"><?= e($s['site_tagline']) ?></span>
-        <?php endif; ?>
-      </span>
-    </a>
+    <a class="brand" href="#top"><?= e($s['site_title']) ?></a>
 
     <nav class="tabs" id="tabs" aria-label="Sections">
-      <a href="#about" class="tab">About</a>
-      <a href="#request" class="tab">Request Hashgacha</a>
-      <a href="#businesses" class="tab">Certified Businesses</a>
-      <a href="#contact" class="tab">Contact</a>
+      <a href="#home" class="tab is-active"><?= e($s['nav_home']) ?></a>
+      <a href="#about" class="tab"><?= e($s['nav_about']) ?></a>
+      <a href="#businesses" class="tab"><?= e($s['nav_businesses']) ?></a>
+      <a href="#contact" class="tab"><?= e($s['nav_contact']) ?></a>
       <span class="tab-indicator" aria-hidden="true"></span>
     </nav>
 
@@ -61,59 +54,35 @@ $waDigits   = phone_digits($s['contact_whatsapp']);
 
 <main id="top">
 
-  <section class="hero">
+  <section class="hero" id="home">
     <div class="wrap hero-inner">
-      <?php if ($s['logo'] !== '' && is_file(UPLOAD_DIR . '/' . $s['logo'])): ?>
-        <img class="hero-logo" src="<?= e('uploads/' . $s['logo']) ?>" alt="<?= e($s['site_title']) ?> logo">
+      <?php if ($hasLogo): ?>
+        <img class="hero-logo" src="<?= e('uploads/' . $s['logo']) ?>" alt="<?= e($s['site_title']) ?>">
       <?php else: ?>
         <div class="hero-logo hero-logo-fallback"><?= e($s['brand_initials'] ?: 'H') ?></div>
       <?php endif; ?>
 
-      <h1><?= e($s['hero_heading']) ?></h1>
-      <p class="hero-sub"><?= e($s['hero_subheading']) ?></p>
+      <h1 class="hero-name"><?= e($s['site_title']) ?></h1>
 
       <div class="hero-actions">
-        <a class="btn btn-primary" href="#businesses">View Certified Businesses</a>
+        <a class="btn btn-primary" href="#businesses"><?= e($s['hero_btn_text']) ?></a>
         <?php if ($formUrl !== ''): ?>
-          <a class="btn btn-ghost" href="<?= e($formUrl) ?>" target="_blank" rel="noopener"><?= e($s['request_btn_text']) ?></a>
+          <a class="btn btn-outline" href="<?= e($formUrl) ?>" target="_blank" rel="noopener"><?= e($s['request_btn_text']) ?></a>
         <?php endif; ?>
       </div>
+    </div>
+  </section>
 
-      <?php if ($businesses): ?>
-        <p class="hero-count"><strong><?= count($businesses) ?></strong> certified <?= count($businesses) === 1 ? 'business' : 'businesses' ?> under our supervision</p>
+  <section class="section section-about" id="about">
+    <div class="wrap about-inner">
+      <?php if (mb_strtolower(trim($s['nav_about'])) !== mb_strtolower(trim($s['about_title']))): ?>
+        <p class="eyebrow"><?= e($s['nav_about']) ?></p>
       <?php endif; ?>
-    </div>
-  </section>
+      <h2><?= e($s['about_title']) ?></h2>
+      <div class="prose"><?= paragraphs($s['about_text']) ?></div>
 
-  <section class="section" id="about">
-    <div class="wrap about-grid">
-      <div class="about-copy">
-        <p class="eyebrow">About</p>
-        <h2><?= e($s['about_title']) ?></h2>
-        <div class="prose"><?= paragraphs($s['about_text']) ?></div>
-      </div>
-      <ul class="about-points">
-        <?php foreach (['about_point_1', 'about_point_2', 'about_point_3'] as $key): ?>
-          <?php if (trim($s[$key] ?? '') !== ''): ?>
-            <li>
-              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7.6 13.4 4.2 10l-1.2 1.2 4.6 4.6 9-9-1.2-1.2z"/></svg>
-              <span><?= e($s[$key]) ?></span>
-            </li>
-          <?php endif; ?>
-        <?php endforeach; ?>
-      </ul>
-    </div>
-  </section>
-
-  <section class="section section-request" id="request">
-    <div class="wrap request-card">
-      <div>
-        <p class="eyebrow eyebrow-light">Certification</p>
-        <h2><?= e($s['request_heading']) ?></h2>
-        <p class="request-text"><?= e($s['request_text']) ?></p>
-      </div>
       <?php if ($formUrl !== ''): ?>
-        <a class="btn btn-gold btn-lg" href="<?= e($formUrl) ?>" target="_blank" rel="noopener">
+        <a class="btn btn-primary btn-lg request-btn" href="<?= e($formUrl) ?>" target="_blank" rel="noopener">
           <?= e($s['request_btn_text']) ?>
           <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M11 3v2h2.6l-6.3 6.3 1.4 1.4L15 6.4V9h2V3z"/><path d="M15 15H5V5h4V3H3v14h14v-6h-2z"/></svg>
         </a>
@@ -123,7 +92,7 @@ $waDigits   = phone_digits($s['contact_whatsapp']);
 
   <section class="section" id="businesses">
     <div class="wrap">
-      <div class="section-head">
+      <div class="section-head section-head-center">
         <p class="eyebrow">Directory</p>
         <h2><?= e($s['businesses_title']) ?></h2>
         <?php if (trim($s['businesses_intro']) !== ''): ?>
@@ -151,7 +120,7 @@ $waDigits   = phone_digits($s['contact_whatsapp']);
       <?php endif; ?>
 
       <?php if (!$businesses): ?>
-        <p class="empty">No certified businesses have been published yet.</p>
+        <p class="empty">No businesses have been published yet.</p>
       <?php else: ?>
         <ul class="grid" id="bizGrid">
           <?php foreach ($businesses as $row): ?>
@@ -182,19 +151,30 @@ $waDigits   = phone_digits($s['contact_whatsapp']);
 
   <section class="section section-contact" id="contact">
     <div class="wrap">
-      <div class="section-head">
-        <p class="eyebrow eyebrow-light">Contact</p>
+      <div class="section-head section-head-center">
+        <?php if (mb_strtolower(trim($s['nav_contact'])) !== mb_strtolower(trim($s['contact_title']))): ?>
+          <p class="eyebrow"><?= e($s['nav_contact']) ?></p>
+        <?php endif; ?>
         <h2><?= e($s['contact_title']) ?></h2>
         <?php if (trim($s['contact_intro']) !== ''): ?>
           <p class="section-intro"><?= e($s['contact_intro']) ?></p>
         <?php endif; ?>
       </div>
 
+      <?php if (trim($s['contact_name']) !== ''): ?>
+        <p class="contact-person">
+          <strong><?= e($s['contact_name']) ?></strong>
+          <?php if (trim($s['contact_role']) !== ''): ?>
+            <span><?= e($s['contact_role']) ?></span>
+          <?php endif; ?>
+        </p>
+      <?php endif; ?>
+
       <div class="contact-grid">
         <?php if ($s['contact_phone'] !== ''): ?>
-          <a class="contact-card" href="tel:<?= e(phone_digits($s['contact_phone'])) ?>">
+          <a class="contact-card" href="tel:+<?= e($telDigits) ?>">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.58 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.46.57 3.6a1 1 0 0 1-.25 1z"/></svg>
-            <span class="contact-label">Phone</span>
+            <span class="contact-label">Call or text</span>
             <span class="contact-value"><?= e($s['contact_phone']) ?></span>
           </a>
         <?php endif; ?>
@@ -265,7 +245,7 @@ $waDigits   = phone_digits($s['contact_whatsapp']);
 
     <ul class="detail-list" id="modalDetails"></ul>
 
-    <p class="modal-foot">Certified under <?= e($s['site_title']) ?></p>
+    <p class="modal-foot">Under the hashgacha of <?= e($s['site_title']) ?></p>
   </div>
 </div>
 

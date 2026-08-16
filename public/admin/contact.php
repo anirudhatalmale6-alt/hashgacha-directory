@@ -5,9 +5,10 @@ require __DIR__ . '/auth.php';
 require_login();
 
 $textFields = [
-    'site_title', 'site_tagline', 'brand_initials', 'theme_accent',
-    'contact_title', 'contact_intro', 'contact_phone', 'contact_whatsapp',
-    'contact_email', 'contact_address', 'contact_hours', 'footer_note',
+    'site_title', 'brand_initials', 'theme_accent', 'theme_button', 'dial_code',
+    'contact_title', 'contact_intro', 'contact_name', 'contact_role',
+    'contact_phone', 'contact_whatsapp', 'contact_email', 'contact_address',
+    'contact_hours', 'footer_note',
 ];
 
 $errors = [];
@@ -20,9 +21,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors['contact_email'] = 'That does not look like a valid email address.';
     }
 
-    $accent = trim((string) ($_POST['theme_accent'] ?? ''));
-    if ($accent !== '' && !preg_match('/^#[0-9a-f]{6}$/i', $accent)) {
-        $errors['theme_accent'] = 'Use a hex colour such as #1f4b8e.';
+    foreach (['theme_accent', 'theme_button'] as $key) {
+        $colour = trim((string) ($_POST[$key] ?? ''));
+        if ($colour !== '' && !preg_match('/^#[0-9a-f]{6}$/i', $colour)) {
+            $errors[$key] = 'Use a hex colour such as #b29228.';
+        }
+    }
+
+    $dial = trim((string) ($_POST['dial_code'] ?? ''));
+    if ($dial !== '' && !preg_match('/^\+?\d{1,4}$/', $dial)) {
+        $errors['dial_code'] = 'Use just the country code digits, for example 972.';
     }
 
     $newLogo = null;
@@ -60,7 +68,7 @@ require __DIR__ . '/layout.php';
 <div class="a-head">
   <div>
     <h1>Contact &amp; Branding</h1>
-    <p class="a-sub">Your logo, name and the contact details shown at the bottom of the page.</p>
+    <p class="a-sub">Your logo, your name, and the contact details at the bottom of the page.</p>
   </div>
 </div>
 
@@ -73,7 +81,7 @@ require __DIR__ . '/layout.php';
 
   <div class="a-card a-card-pad">
     <h2 class="a-card-title">Hashgacha logo</h2>
-    <p class="a-hint">Shown in the header and at the top of the page. PNG with a transparent background works best.</p>
+    <p class="a-hint">This is the large logo at the top of the page. PNG with a transparent background works best.</p>
 
     <div class="a-logo-row">
       <div class="a-thumb a-thumb-lg" id="logoPreview">
@@ -97,17 +105,12 @@ require __DIR__ . '/layout.php';
   </div>
 
   <div class="a-card a-card-pad">
-    <h2 class="a-card-title">Name &amp; appearance</h2>
+    <h2 class="a-card-title">Name &amp; colours</h2>
 
     <div class="a-grid-2">
       <label class="a-field">
-        <span>Hashgacha name</span>
+        <span>Hashgacha name <em>shown in the menu bar and under the logo</em></span>
         <input type="text" name="site_title" value="<?= e($s['site_title']) ?>">
-      </label>
-
-      <label class="a-field">
-        <span>Short tagline <em>under the name in the header</em></span>
-        <input type="text" name="site_tagline" value="<?= e($s['site_tagline']) ?>">
       </label>
 
       <label class="a-field">
@@ -116,37 +119,73 @@ require __DIR__ . '/layout.php';
       </label>
 
       <label class="a-field">
-        <span>Accent colour</span>
+        <span>Accent colour <em>headings, underlines</em></span>
         <span class="a-color">
-          <input type="color" name="theme_accent" value="<?= e(preg_match('/^#[0-9a-f]{6}$/i', $s['theme_accent']) ? $s['theme_accent'] : '#1f4b8e') ?>">
+          <input type="color" name="theme_accent" value="<?= e(preg_match('/^#[0-9a-f]{6}$/i', $s['theme_accent']) ? $s['theme_accent'] : '#b29228') ?>">
           <code><?= e($s['theme_accent']) ?></code>
         </span>
         <?php if (isset($errors['theme_accent'])): ?><small class="a-err"><?= e($errors['theme_accent']) ?></small><?php endif; ?>
+      </label>
+
+      <label class="a-field">
+        <span>Button colour</span>
+        <span class="a-color">
+          <input type="color" name="theme_button" value="<?= e(preg_match('/^#[0-9a-f]{6}$/i', $s['theme_button']) ? $s['theme_button'] : '#2a6a9a') ?>">
+          <code><?= e($s['theme_button']) ?></code>
+        </span>
+        <?php if (isset($errors['theme_button'])): ?><small class="a-err"><?= e($errors['theme_button']) ?></small><?php endif; ?>
       </label>
     </div>
   </div>
 
   <div class="a-card a-card-pad">
-    <h2 class="a-card-title">Hashgacha contact information</h2>
+    <h2 class="a-card-title">Phone numbers</h2>
+    <p class="a-hint">
+      Numbers are shown on the site exactly as you type them here. For the tap-to-call
+      and WhatsApp links to work from abroad they need a country code, so a number
+      starting with <code>0</code> gets the code below added automatically. A number that
+      already starts with <code>+</code> is left alone — use that for numbers in other
+      countries.
+    </p>
 
-    <label class="a-field">
-      <span>Section title</span>
-      <input type="text" name="contact_title" value="<?= e($s['contact_title']) ?>">
+    <label class="a-field" style="max-width:220px">
+      <span>Default country code</span>
+      <input type="text" name="dial_code" value="<?= e($s['dial_code']) ?>" placeholder="972">
+      <?php if (isset($errors['dial_code'])): ?><small class="a-err"><?= e($errors['dial_code']) ?></small><?php endif; ?>
     </label>
+  </div>
 
-    <label class="a-field">
-      <span>Intro text</span>
-      <textarea name="contact_intro" rows="2"><?= e($s['contact_intro']) ?></textarea>
-    </label>
+  <div class="a-card a-card-pad">
+    <h2 class="a-card-title">Contact section</h2>
 
     <div class="a-grid-2">
+      <label class="a-field">
+        <span>Section title</span>
+        <input type="text" name="contact_title" value="<?= e($s['contact_title']) ?>">
+      </label>
+
+      <label class="a-field">
+        <span>Intro text</span>
+        <input type="text" name="contact_intro" value="<?= e($s['contact_intro']) ?>">
+      </label>
+
+      <label class="a-field">
+        <span>Contact person</span>
+        <input type="text" name="contact_name" value="<?= e($s['contact_name']) ?>">
+      </label>
+
+      <label class="a-field">
+        <span>Their title</span>
+        <input type="text" name="contact_role" value="<?= e($s['contact_role']) ?>">
+      </label>
+
       <label class="a-field">
         <span>Phone</span>
         <input type="text" name="contact_phone" value="<?= e($s['contact_phone']) ?>">
       </label>
 
       <label class="a-field">
-        <span>WhatsApp <em>with country code</em></span>
+        <span>WhatsApp</span>
         <input type="text" name="contact_whatsapp" value="<?= e($s['contact_whatsapp']) ?>">
       </label>
 
@@ -163,17 +202,17 @@ require __DIR__ . '/layout.php';
     </div>
 
     <label class="a-field">
-      <span>Office address</span>
+      <span>Address</span>
       <input type="text" name="contact_address" value="<?= e($s['contact_address']) ?>">
     </label>
 
-    <p class="a-hint">Leave any field empty to hide that card on the website.</p>
+    <p class="a-hint">Leave any field empty and its card disappears from the website.</p>
   </div>
 
   <div class="a-card a-card-pad">
     <h2 class="a-card-title">Footer</h2>
     <label class="a-field">
-      <span>Footer note</span>
+      <span>Footer note <em>optional</em></span>
       <textarea name="footer_note" rows="2"><?= e($s['footer_note']) ?></textarea>
     </label>
   </div>

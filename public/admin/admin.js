@@ -28,14 +28,12 @@
     });
   }
 
-  /* Accent colour swatch label. */
-  var colorInput = document.querySelector('.a-color input[type="color"]');
-  if (colorInput) {
-    var code = colorInput.parentNode.querySelector('code');
-    colorInput.addEventListener('input', function () {
-      if (code) { code.textContent = colorInput.value; }
-    });
-  }
+  /* Keep each colour swatch's hex label in step with its picker. */
+  Array.prototype.forEach.call(document.querySelectorAll('.a-color input[type="color"]'), function (input) {
+    var code = input.parentNode.querySelector('code');
+    if (!code) { return; }
+    input.addEventListener('input', function () { code.textContent = input.value; });
+  });
 
   /* Drag rows to reorder the business grid. */
   var table = document.getElementById('bizTable');

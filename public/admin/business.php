@@ -147,16 +147,22 @@ require __DIR__ . '/layout.php';
 
   <div class="a-card a-card-pad">
     <h2 class="a-card-title">Contact information</h2>
+    <p class="a-hint">
+      Numbers appear on the site exactly as typed. A number starting with <code>0</code>
+      gets the country code from <a href="contact.php">Contact &amp; Branding</a> added to
+      its call and WhatsApp links; write a number from another country with a
+      <code>+</code>, e.g. <code>+1 484-521-1252</code>.
+    </p>
 
     <div class="a-grid-2">
       <label class="a-field">
         <span>Phone number</span>
-        <input type="text" name="phone" value="<?= e($biz['phone']) ?>" placeholder="+1 (555) 010-2030">
+        <input type="text" name="phone" value="<?= e($biz['phone']) ?>" placeholder="053-384-2614">
       </label>
 
       <label class="a-field">
-        <span>WhatsApp <em>with country code</em></span>
-        <input type="text" name="whatsapp" value="<?= e($biz['whatsapp']) ?>" placeholder="+15550102030">
+        <span>WhatsApp</span>
+        <input type="text" name="whatsapp" value="<?= e($biz['whatsapp']) ?>" placeholder="053-384-2614">
       </label>
 
       <label class="a-field">

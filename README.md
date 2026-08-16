@@ -1,9 +1,9 @@
-# Hashgacha — single-page site with admin panel
+# Ramat Eshkol Kosher — single-page site with admin panel
 
-A one-page website for a Hashgacha organisation: about text, a Request Hashgacha
-button pointing at a Google Form, a grid of certified business logos that open a
-contact popup, and the Hashgacha's own contact details — all editable from a
-password-protected admin panel.
+A one-page website for the Ramat Eshkol Kosher hashgacha: the seal at the top,
+an About section, a Request Hashgacha button pointing at a Google Form, a grid
+of business logos that open a contact popup, and the hashgacha office's own
+contact details — all editable from a password-protected admin panel.
 
 No database server, no build step, no Composer. PHP + SQLite, so it runs on any
 normal shared hosting (cPanel, Plesk, or a VPS).
@@ -41,8 +41,8 @@ Then:
 | Page | What it controls |
 | --- | --- |
 | **Certified Businesses** | Add, edit, hide or delete businesses. Drag the rows by the `⋮⋮` handle to change the order the logos appear in, then press *Save new order*. |
-| **Page Content** | Headline, About text and its three bullet points, the Request Hashgacha wording, the Google Form link and the button label, and the directory intro. |
-| **Contact & Branding** | The Hashgacha logo, name, tagline, accent colour, and every contact detail in the Contact section and footer. |
+| **Page Content** | The four menu tabs, the About text, the Request Hashgacha button label and its Google Form link, and the directory heading and intro. |
+| **Contact & Branding** | The seal, the hashgacha name, the accent and button colours, the default phone country code, and every contact detail in the Contact section and footer. |
 | **Account** | Your admin username and password. |
 
 Notes:
@@ -50,24 +50,32 @@ Notes:
 - Leave any contact field empty and its card simply disappears from the site.
 - The **Category** field on a business creates the filter buttons above the grid.
   Leave it blank if you do not want categories.
-- WhatsApp numbers need the country code (`+15550102030`) — that is what
-  `wa.me` expects.
+- Phone numbers are shown exactly as typed. A number starting with `0` is
+  treated as local and gets the **default country code** (set on *Contact &
+  Branding*, `972` for Israel) added to its call and WhatsApp links. A number
+  from another country must be written with a `+`, for example
+  `+1 484-521-1252` — that one is left exactly as it is.
 - A website typed without `https://` gets it added automatically.
 - The search box appears once there are more than five businesses. It can be
   switched off in *Page Content*.
 
-## Demo content
+## Starting content
 
-`tools/seed_demo.php` fills the site with ten sample businesses and generated
-placeholder logos so the layout can be reviewed before the real content exists.
+`tools/seed_site.php` loads the hashgacha seal, the office contact details and
+the three businesses supplied at the start of the project, copying their logos
+out of `content/logos/` into `public/uploads/`.
 
 ```
-php tools/seed_demo.php
+php tools/seed_site.php
 ```
 
-Re-running it replaces the demo rows and leaves anything you added yourself
-untouched. To clear the demo out completely, delete those ten rows from the
-admin panel — or delete `data/site.sqlite` to start from a blank site.
+It is safe to re-run: businesses are matched by name, so it updates them rather
+than creating duplicates, and it never overwrites wording that has since been
+edited in the admin panel. Pass `--force` if you do want it to overwrite the
+text settings back to their starting values.
+
+`content/logos/rek-logo-black.png` is the black version of the seal, in case the
+site is ever wanted on a dark background — upload it from *Contact & Branding*.
 
 ## Custom paths
 
@@ -101,5 +109,6 @@ public/              the web root
   uploads/           logo images
   admin/             admin panel
 src/                 bootstrap, database schema, helpers
-tools/seed_demo.php  demo content generator
+content/logos/       starting logo files used by the seeder
+tools/seed_site.php  starting-content loader
 ```

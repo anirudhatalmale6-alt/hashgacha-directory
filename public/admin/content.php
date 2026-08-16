@@ -5,9 +5,10 @@ require __DIR__ . '/auth.php';
 require_login();
 
 $fields = [
-    'hero_heading', 'hero_subheading',
-    'about_title', 'about_text', 'about_point_1', 'about_point_2', 'about_point_3',
-    'request_heading', 'request_text', 'request_btn_text', 'google_form_url',
+    'nav_home', 'nav_about', 'nav_businesses', 'nav_contact',
+    'hero_btn_text',
+    'about_title', 'about_text',
+    'request_btn_text', 'google_form_url',
     'businesses_title', 'businesses_intro',
 ];
 
@@ -56,21 +57,41 @@ require __DIR__ . '/layout.php';
   <?= csrf_field() ?>
 
   <div class="a-card a-card-pad">
+    <h2 class="a-card-title">Menu tabs</h2>
+    <p class="a-hint">The four tabs across the top of the page.</p>
+
+    <div class="a-grid-2">
+      <label class="a-field">
+        <span>Tab 1 <em>top of page</em></span>
+        <input type="text" name="nav_home" value="<?= e($s['nav_home']) ?>">
+      </label>
+      <label class="a-field">
+        <span>Tab 2 <em>about</em></span>
+        <input type="text" name="nav_about" value="<?= e($s['nav_about']) ?>">
+      </label>
+      <label class="a-field">
+        <span>Tab 3 <em>business directory</em></span>
+        <input type="text" name="nav_businesses" value="<?= e($s['nav_businesses']) ?>">
+      </label>
+      <label class="a-field">
+        <span>Tab 4 <em>contact</em></span>
+        <input type="text" name="nav_contact" value="<?= e($s['nav_contact']) ?>">
+      </label>
+    </div>
+  </div>
+
+  <div class="a-card a-card-pad">
     <h2 class="a-card-title">Top of the page</h2>
+    <p class="a-hint">The logo and the name shown under it come from <a href="contact.php">Contact &amp; Branding</a>.</p>
 
     <label class="a-field">
-      <span>Main heading</span>
-      <input type="text" name="hero_heading" value="<?= e($s['hero_heading']) ?>">
-    </label>
-
-    <label class="a-field">
-      <span>Sub-heading</span>
-      <textarea name="hero_subheading" rows="2"><?= e($s['hero_subheading']) ?></textarea>
+      <span>First button <em>scrolls down to the business list</em></span>
+      <input type="text" name="hero_btn_text" value="<?= e($s['hero_btn_text']) ?>">
     </label>
   </div>
 
   <div class="a-card a-card-pad">
-    <h2 class="a-card-title">About the Hashgacha</h2>
+    <h2 class="a-card-title">About</h2>
 
     <label class="a-field">
       <span>Section title</span>
@@ -79,30 +100,13 @@ require __DIR__ . '/layout.php';
 
     <label class="a-field">
       <span>About text <em>leave a blank line between paragraphs</em></span>
-      <textarea name="about_text" rows="8"><?= e($s['about_text']) ?></textarea>
+      <textarea name="about_text" rows="9"><?= e($s['about_text']) ?></textarea>
     </label>
-
-    <p class="a-hint">The three short points shown in the box beside the text. Leave one blank to hide it.</p>
-    <?php foreach ([1, 2, 3] as $n): ?>
-      <label class="a-field">
-        <span>Point <?= $n ?></span>
-        <input type="text" name="about_point_<?= $n ?>" value="<?= e($s['about_point_' . $n]) ?>">
-      </label>
-    <?php endforeach; ?>
   </div>
 
   <div class="a-card a-card-pad">
-    <h2 class="a-card-title">Request Hashgacha</h2>
-
-    <label class="a-field">
-      <span>Heading</span>
-      <input type="text" name="request_heading" value="<?= e($s['request_heading']) ?>">
-    </label>
-
-    <label class="a-field">
-      <span>Text</span>
-      <textarea name="request_text" rows="3"><?= e($s['request_text']) ?></textarea>
-    </label>
+    <h2 class="a-card-title">Request Hashgacha button</h2>
+    <p class="a-hint">This button sits under the About text and at the top of the page. It opens your Google Form in a new tab.</p>
 
     <div class="a-grid-2">
       <label class="a-field">
@@ -112,21 +116,23 @@ require __DIR__ . '/layout.php';
 
       <label class="a-field">
         <span>Google Form link</span>
-        <input type="text" name="google_form_url" value="<?= e($s['google_form_url']) ?>" placeholder="https://forms.gle/...">
+        <input type="text" name="google_form_url" value="<?= e($s['google_form_url']) ?>" placeholder="https://docs.google.com/forms/...">
       </label>
     </div>
 
     <?php if (trim($s['google_form_url']) !== ''): ?>
       <p class="a-hint">
         Current link:
-        <a href="<?= e(normalize_url($s['google_form_url'])) ?>" target="_blank" rel="noopener"><?= e(pretty_url($s['google_form_url'])) ?></a>
-        — open it to check it works.
+        <a href="<?= e(normalize_url($s['google_form_url'])) ?>" target="_blank" rel="noopener">open the form</a>
+        — worth checking after you change it.
       </p>
+    <?php else: ?>
+      <p class="a-hint">No link set yet, so the button is hidden on the website.</p>
     <?php endif; ?>
   </div>
 
   <div class="a-card a-card-pad">
-    <h2 class="a-card-title">Certified Businesses section</h2>
+    <h2 class="a-card-title">Business directory section</h2>
 
     <label class="a-field">
       <span>Section title</span>

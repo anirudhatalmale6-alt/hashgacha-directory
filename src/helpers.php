@@ -32,6 +32,42 @@ function phone_digits(?string $value): string
     return $digits;
 }
 
+/**
+ * Build the international form of a number for tel: and wa.me links, while the
+ * number stays displayed exactly as it was typed.
+ *
+ * A leading "+" is taken as authoritative (so a US WhatsApp number written
+ * +1 484-521-1252 is never given an Israeli code). A leading "0" is a local
+ * number and gets the site's dial code. Anything else is used unchanged.
+ */
+function intl_digits(?string $value, ?string $dialCode = null): string
+{
+    $value = trim((string) $value);
+    if ($value === '') {
+        return '';
+    }
+
+    $digits = phone_digits($value);
+    if ($digits === '') {
+        return '';
+    }
+
+    if (str_starts_with($value, '+')) {
+        return $digits;
+    }
+
+    $dialCode = phone_digits($dialCode ?? setting('dial_code'));
+    if ($dialCode === '') {
+        return $digits;
+    }
+
+    if (str_starts_with($digits, '0')) {
+        return $dialCode . ltrim($digits, '0');
+    }
+
+    return $digits;
+}
+
 /** Make sure a user-entered website has a scheme. */
 function normalize_url(?string $url): string
 {
@@ -101,7 +137,8 @@ function business_categories(): array
 function business_payload(array $row): array
 {
     $website = normalize_url($row['website']);
-    $waDigits = phone_digits($row['whatsapp']);
+    $waDigits = intl_digits($row['whatsapp']);
+    $telDigits = intl_digits($row['phone']);
 
     return [
         'id'          => (int) $row['id'],
@@ -110,7 +147,7 @@ function business_payload(array $row): array
         'description' => (string) $row['description'],
         'address'     => (string) $row['address'],
         'phone'       => (string) $row['phone'],
-        'phoneHref'   => $row['phone'] !== '' ? 'tel:' . phone_digits($row['phone']) : '',
+        'phoneHref'   => $telDigits !== '' ? 'tel:+' . $telDigits : '',
         'whatsapp'    => (string) $row['whatsapp'],
         'whatsappHref' => $waDigits !== '' ? 'https://wa.me/' . $waDigits : '',
         'email'       => (string) $row['email'],
