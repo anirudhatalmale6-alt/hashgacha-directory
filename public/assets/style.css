@@ -197,7 +197,7 @@ a { color: var(--button); }
 }
 
 .hero-inner {
-  padding: 56px 22px 62px;
+  padding: 60px 22px 72px;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -227,8 +227,8 @@ a { color: var(--button); }
 }
 
 .hero-name {
-  font-size: clamp(30px, 5vw, 46px);
-  margin: 0 0 28px;
+  font-size: clamp(29px, 4.4vw, 42px);
+  margin: 0 0 30px;
 }
 
 .hero-actions {
@@ -274,8 +274,8 @@ a { color: var(--button); }
 
 /* ---------- Sections ---------- */
 
-.section { padding: 78px 0; }
-.section-head { max-width: 62ch; margin-bottom: 34px; }
+.section { padding: 92px 0; }
+.section-head { max-width: 62ch; margin-bottom: 38px; }
 .section h2 { font-size: clamp(25px, 3.2vw, 34px); }
 .section-intro { color: var(--ink-2); margin: 12px 0 0; }
 
@@ -297,12 +297,13 @@ a { color: var(--button); }
   text-align: center;
 }
 .about-inner .prose p {
-  font-size: 17px;
-  line-height: 1.75;
+  font-size: 18px;
+  line-height: 1.8;
+  color: var(--ink-2);
 }
-.about-inner h2 { margin-bottom: 20px; }
+.about-inner h2 { margin-bottom: 22px; }
 
-.request-btn { margin-top: 34px; }
+.request-btn { margin-top: 40px; }
 
 .section-head-center {
   max-width: 62ch;
@@ -516,14 +517,14 @@ a.contact-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md)
 .footer {
   background: var(--ink);
   color: rgba(255, 255, 255, .72);
-  padding: 42px 0;
+  padding: 34px 0;
   text-align: center;
 }
 .footer-brand {
   font-family: Fraunces, Georgia, serif;
-  font-size: 19px;
+  font-size: 18px;
   color: #fff;
-  margin: 0 0 8px;
+  margin: 0 0 4px;
 }
 .footer-note { margin: 0 0 14px; font-size: 14px; max-width: 60ch; margin-inline: auto; }
 .footer-copy { margin: 0; font-size: 12.5px; color: rgba(255, 255, 255, .45); }
@@ -706,7 +707,7 @@ body.no-scroll { overflow: hidden; }
   .tab { padding: 13px 16px; border-radius: 10px; font-size: 15.5px; }
   .tab-indicator { display: none; }
 
-  .section { padding: 56px 0; }
+  .section { padding: 60px 0; }
   .hero-inner { padding: 44px 22px 50px; }
   .hero-logo-fallback { width: 120px; height: 120px; font-size: 36px; }
   .btn { width: 100%; justify-content: center; }

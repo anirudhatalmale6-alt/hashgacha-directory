@@ -93,7 +93,6 @@ $hasLogo    = $s['logo'] !== '' && is_file(UPLOAD_DIR . '/' . $s['logo']);
   <section class="section" id="businesses">
     <div class="wrap">
       <div class="section-head section-head-center">
-        <p class="eyebrow">Directory</p>
         <h2><?= e($s['businesses_title']) ?></h2>
         <?php if (trim($s['businesses_intro']) !== ''): ?>
           <p class="section-intro"><?= e($s['businesses_intro']) ?></p>
@@ -221,7 +220,7 @@ $hasLogo    = $s['logo'] !== '' && is_file(UPLOAD_DIR . '/' . $s['logo']);
     <?php if (trim($s['footer_note']) !== ''): ?>
       <p class="footer-note"><?= e($s['footer_note']) ?></p>
     <?php endif; ?>
-    <p class="footer-copy">&copy; <?= date('Y') ?> <?= e($s['site_title']) ?>. All rights reserved.</p>
+    <p class="footer-copy">&copy; <?= date('Y') ?></p>
   </div>
 </footer>
 
@@ -244,8 +243,6 @@ $hasLogo    = $s['logo'] !== '' && is_file(UPLOAD_DIR . '/' . $s['logo']);
     <p class="modal-desc" id="modalDesc" hidden></p>
 
     <ul class="detail-list" id="modalDetails"></ul>
-
-    <p class="modal-foot">Under the hashgacha of <?= e($s['site_title']) ?></p>
   </div>
 </div>
 
