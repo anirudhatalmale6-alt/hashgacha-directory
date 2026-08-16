@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
 
-require __DIR__ . '/../src/init.php';
-require __DIR__ . '/../src/helpers.php';
+require_once __DIR__ . '/../src/init.php';
+require_once __DIR__ . '/../src/helpers.php';
 
 $s          = settings();
 $businesses = active_businesses();

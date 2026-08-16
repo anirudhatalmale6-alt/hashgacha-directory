@@ -5,8 +5,8 @@
 
 declare(strict_types=1);
 
-require dirname(__DIR__, 2) . '/src/init.php';
-require dirname(__DIR__, 2) . '/src/helpers.php';
+require_once dirname(__DIR__, 2) . '/src/init.php';
+require_once dirname(__DIR__, 2) . '/src/helpers.php';
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_name('hashgacha_admin');

@@ -13,8 +13,8 @@
 
 declare(strict_types=1);
 
-require dirname(__DIR__) . '/src/init.php';
-require dirname(__DIR__) . '/src/helpers.php';
+require_once dirname(__DIR__) . '/src/init.php';
+require_once dirname(__DIR__) . '/src/helpers.php';
 
 if (PHP_SAPI !== 'cli') {
     exit('Run this from the command line.');

@@ -10,3 +10,6 @@ public/uploads/*
 
 *.log
 .DS_Store
+
+# Static preview export
+build/

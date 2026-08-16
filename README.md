@@ -77,6 +77,20 @@ text settings back to their starting values.
 `content/logos/rek-logo-black.png` is the black version of the seal, in case the
 site is ever wanted on a dark background — upload it from *Contact & Branding*.
 
+## Static preview
+
+`tools/export_preview.php` renders the public page to plain HTML so it can be
+put on a static host for review:
+
+```
+php tools/export_preview.php          # writes build/preview
+```
+
+It copies the stylesheet, the script and only the logos the page actually
+references. The admin panel is **not** exported — it needs PHP, which static
+hosts such as GitHub Pages do not run. A static copy is fine for showing the
+site to someone; the real site needs PHP hosting so the admin panel works.
+
 ## Custom paths
 
 Create `config.php` in the project root to move the data or uploads folders,
