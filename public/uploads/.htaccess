@@ -1,5 +1,27 @@
 # Uploads are data, never code.
-php_flag engine off
-<FilesMatch "\.(php|php3|php4|php5|php7|php8|phtml|phar|cgi|pl|py|sh)$">
-  Require all denied
+
+# The real protection: nothing that could run is served from here.
+<FilesMatch "\.(php|php3|php4|php5|php7|php8|phtml|phar|cgi|pl|py|sh|htaccess)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
 </FilesMatch>
+
+# Belt and braces where the PHP engine can be switched off per folder. Only
+# mod_php understands this; leaving it unguarded is a 500 on hosts that run
+# PHP as FPM or CGI, so it stays inside the check.
+<IfModule mod_php.c>
+  php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+  php_flag engine off
+</IfModule>
+<IfModule mod_php8.c>
+  php_flag engine off
+</IfModule>
+
+Options -Indexes

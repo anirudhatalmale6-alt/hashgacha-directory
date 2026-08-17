@@ -9,6 +9,37 @@ declare(strict_types=1);
 define('APP_VERSION', '1.0.0');
 define('APP_ROOT', dirname(__DIR__));
 
+/**
+ * A shared host that is missing PHP 8 or the SQLite driver would otherwise
+ * fail with a parse error or a raw exception. Say what to switch on instead.
+ */
+function hosting_requirement_failed(string $problem, string $fix): void
+{
+    http_response_code(500);
+    header('Content-Type: text/html; charset=utf-8');
+    echo '<!doctype html><meta charset="utf-8"><title>Setup needed</title>',
+         '<div style="font:16px/1.6 system-ui,sans-serif;max-width:38rem;margin:12vh auto;padding:0 6vw">',
+         '<h1 style="font-size:1.3rem">This site needs one hosting setting changed</h1>',
+         '<p>', htmlspecialchars($problem, ENT_QUOTES), '</p>',
+         '<p><strong>How to fix it:</strong> ', htmlspecialchars($fix, ENT_QUOTES), '</p>',
+         '</div>';
+    exit;
+}
+
+if (PHP_VERSION_ID < 80000) {
+    hosting_requirement_failed(
+        'The server is running PHP ' . PHP_VERSION . '. This site needs PHP 8.0 or newer.',
+        'In hPanel open Websites, pick the domain, then Advanced, PHP Configuration, and set the PHP version to 8.1 or newer.'
+    );
+}
+
+if (!extension_loaded('pdo_sqlite')) {
+    hosting_requirement_failed(
+        'The SQLite database driver (pdo_sqlite) is switched off for this domain, so the site cannot read its content.',
+        'In hPanel open Websites, pick the domain, then Advanced, PHP Configuration, open the PHP Extensions tab and tick pdo_sqlite (and sqlite3). Save, wait a minute, then reload this page.'
+    );
+}
+
 // Optional: create config.php next to this folder to point the app at a
 // different data or uploads directory (see README).
 if (is_file(APP_ROOT . '/config.php')) {
