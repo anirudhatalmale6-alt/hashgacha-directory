@@ -153,13 +153,14 @@ $businesses = [
         'logo'     => 'biz-scaled.png',
     ],
     [
-        // Number read off the logo artwork — waiting on the client to confirm
-        // it and supply an email and website.
+        // The number was read off the logo artwork and the owner's own form
+        // response then matched it exactly. Their website answer is a WhatsApp
+        // catalogue link that the shared spreadsheet cut off mid-URL.
         'name'     => 'The Shalosh Seudos Spot',
         'category' => '',
         'phone'    => '055-333-8650',
         'whatsapp' => '055-333-8650',
-        'email'    => '',
+        'email'    => 'Rivkyy03@gmail.com',
         'website'  => '',
         'logo'     => 'biz-shalosh-seudos.png',
     ],
@@ -174,10 +175,16 @@ $businesses = [
     ],
 
     /* --------------------------------------------------------------------
-     * Second batch: logos only. Where a number or address is printed on the
-     * artwork itself it has been filled in and flagged for the client to
-     * confirm; the rest are waiting on details and show "No contact details
-     * listed" in the popup until they arrive.
+     * Second batch. These arrived as logos only, so anything printed on the
+     * artwork was read off it and flagged for the client to confirm. The
+     * client later shared their Google Form responses, and where an owner
+     * answered for themselves that answer wins over the artwork.
+     *
+     * The responses came as a PDF print of the sheet, which clips each cell to
+     * its column width — so several emails end mid-address. A truncated value
+     * is only completed where the domain is unmistakable; where the local part
+     * itself was cut the field is left empty rather than invented. The rest
+     * still show "No contact details listed" in the popup.
      * ----------------------------------------------------------------- */
 
     [
@@ -228,20 +235,23 @@ $businesses = [
         'logo'     => 'biz-buddy-bites.png',
     ],
     [
+        // One number for both, so the popup shows a single combined row.
         'name'     => 'Butcher\'s Cut',
         'category' => '',
-        'phone'    => '',
-        'whatsapp' => '',
-        'email'    => '',
-        'website'  => '',
+        'phone'    => '058-424-3674',
+        'whatsapp' => '058-424-3674',
+        'email'    => 'butcherscutisrael@gmail.com',
+        'website'  => 'https://butcherscutisrael.com',
         'logo'     => 'biz-butchers-cut.png',
     ],
     [
+        // Their form gave a US number to call and an Israeli one for WhatsApp —
+        // the reverse of the usual pairing here, but that is what they wrote.
         'name'     => 'Chicken Munch',
         'category' => '',
-        'phone'    => '',
-        'whatsapp' => '',
-        'email'    => '',
+        'phone'    => '+1 929-474-8871',
+        'whatsapp' => '055-331-6975',
+        'email'    => 'chickenmunch26@gmail.com',
         'website'  => '',
         'logo'     => 'biz-chicken-munch.png',
     ],
@@ -255,12 +265,14 @@ $businesses = [
         'logo'     => 'biz-cookie-and-dough.png',
     ],
     [
-        // "questions or to place an order" on the label, beside a phone icon.
+        // The owner's form response gives a different number from the one
+        // printed on their label (055-332-1308), so their own answer wins and
+        // the discrepancy has been raised with the client.
         'name'     => 'Crumbz',
         'category' => '',
-        'phone'    => '055-332-1308',
-        'whatsapp' => '',
-        'email'    => '',
+        'phone'    => '058-323-1201',
+        'whatsapp' => '058-323-1201',
+        'email'    => 'Shaindyhershman@gmail.com',
         'website'  => '',
         'logo'     => 'biz-crumbz.png',
     ],
@@ -274,11 +286,12 @@ $businesses = [
         'logo'     => 'biz-crust-and-co.png',
     ],
     [
+        // Their form response calls the business simply "Dipped".
         'name'     => 'Dipped Artisan Dips',
         'category' => '',
-        'phone'    => '',
-        'whatsapp' => '',
-        'email'    => '',
+        'phone'    => '055-238-1191',
+        'whatsapp' => '055-337-3043',
+        'email'    => 'Artisandippedisrael@gmail.com',
         'website'  => '',
         'logo'     => 'biz-dipped-artisan-dips.png',
     ],
@@ -294,11 +307,12 @@ $businesses = [
         'logo'     => 'biz-heimishe-cookies.png',
     ],
     [
+        // Their form response spells it "Homemade for You".
         'name'     => 'Home Made For You',
         'category' => '',
-        'phone'    => '',
-        'whatsapp' => '',
-        'email'    => '',
+        'phone'    => '053-963-3594',
+        'whatsapp' => '+1 410-805-1423',
+        'email'    => 'tovaambush@gmail.com',
         'website'  => '',
         'logo'     => 'biz-home-made-for-you.png',
     ],
@@ -360,12 +374,14 @@ $businesses = [
         'logo'     => 'biz-lettuce-eat-fresh.png',
     ],
     [
-        // Printed under the seal at the foot of the logo.
+        // The number was read off the foot of the logo and their form response
+        // matched it, and gave the same number again for WhatsApp — so this one
+        // shows as a single combined row.
         'name'     => 'LVR',
         'category' => '',
         'phone'    => '055-330-2580',
-        'whatsapp' => '',
-        'email'    => '',
+        'whatsapp' => '055-330-2580',
+        'email'    => 'Pinnyabc@gmail.com',
         'website'  => '',
         'logo'     => 'biz-lvr.png',
     ],
@@ -388,10 +404,12 @@ $businesses = [
         'logo'     => 'biz-naturelle-by-yaelle.png',
     ],
     [
+        // Their email was cut off at the "@" where the spreadsheet clipped the
+        // column, so it is left blank rather than guessed at.
         'name'     => 'Nine by Thirteen Catering',
         'category' => '',
-        'phone'    => '',
-        'whatsapp' => '',
+        'phone'    => '053-319-6164',
+        'whatsapp' => '+1 718-564-6570',
         'email'    => '',
         'website'  => '',
         'logo'     => 'biz-nine-by-thirteen.png',
@@ -407,20 +425,23 @@ $businesses = [
         'logo'     => 'biz-scored.png',
     ],
     [
+        // They gave two numbers; the spreadsheet clipped the second one part
+        // way through, and their email with it, so only the first is set.
         'name'     => 'Something Special Catering',
         'category' => '',
-        'phone'    => '',
+        'phone'    => '02-540-1236',
         'whatsapp' => '',
         'email'    => '',
         'website'  => '',
         'logo'     => 'biz-something-special.png',
     ],
     [
+        // One number for calls and WhatsApp, so it shows as a combined row.
         'name'     => 'The Cholent Guy',
         'category' => '',
-        'phone'    => '',
-        'whatsapp' => '',
-        'email'    => '',
+        'phone'    => '053-437-7192',
+        'whatsapp' => '053-437-7192',
+        'email'    => 'as0548429965@gmail.com',
         'website'  => '',
         'logo'     => 'biz-cholent-guy.png',
     ],
