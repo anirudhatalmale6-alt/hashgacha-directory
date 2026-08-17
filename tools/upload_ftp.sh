@@ -17,7 +17,17 @@ set -eu
 
 root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 local_dir="$root/build/deploy"
-remote_dir=${FTP_DIR:-public_html}
+
+# Where the site goes, relative to wherever the FTP account lands on login.
+#
+# The default is "." because a per-site FTP account is normally jailed to that
+# site's public_html already — its login directory IS the document root, and
+# appending "public_html" buries the whole site one level too deep, where the
+# web server serves a stale placeholder instead. A plan-wide account that lands
+# a level higher needs FTP_DIR=public_html passed in explicitly.
+#
+# Do not guess: run "list" first and look at what is beside your upload.
+remote_dir=${FTP_DIR:-.}
 mode=${1:-list}
 
 for var in FTP_HOST FTP_USER FTP_PASS; do
