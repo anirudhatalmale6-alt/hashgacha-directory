@@ -54,11 +54,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $alphabetical = setting('business_order') !== 'manual';
 
-// Show the admin table the same way the website will show the grid.
+// Show the admin table the same way the website will show the grid, accents
+// folded and all — see name_sort_key().
 $rows = db()->query(
-    'SELECT * FROM businesses ORDER BY ' .
-    ($alphabetical ? 'name COLLATE NOCASE ASC' : 'sort_order ASC, name COLLATE NOCASE ASC')
+    'SELECT * FROM businesses ORDER BY sort_order ASC, name COLLATE NOCASE ASC'
 )->fetchAll();
+
+if ($alphabetical) {
+    $rows = sort_by_name($rows);
+}
 
 $activeCount = 0;
 foreach ($rows as $row) {

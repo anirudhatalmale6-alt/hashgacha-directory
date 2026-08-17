@@ -111,18 +111,48 @@ function asset_url(string $relative): string
 }
 
 /**
+ * A name reduced to what alphabetical order should actually compare.
+ *
+ * SQLite's NOCASE only folds ASCII, so it sorts BÜRNT byte-by-byte and lands
+ * it after Butcher's Cut. Folding the accent first puts it where a reader
+ * expects, between Buddy Bites and Butcher's Cut. Leading "The" is kept —
+ * the client asked for a plain A-Z listing, not a filing-cabinet one.
+ */
+function name_sort_key(string $name): string
+{
+    $folded = strtr(mb_strtolower(trim($name)), [
+        'á'=>'a','à'=>'a','â'=>'a','ä'=>'a','ã'=>'a','å'=>'a','ā'=>'a',
+        'é'=>'e','è'=>'e','ê'=>'e','ë'=>'e','ē'=>'e',
+        'í'=>'i','ì'=>'i','î'=>'i','ï'=>'i','ī'=>'i',
+        'ó'=>'o','ò'=>'o','ô'=>'o','ö'=>'o','õ'=>'o','ø'=>'o','ō'=>'o',
+        'ú'=>'u','ù'=>'u','û'=>'u','ü'=>'u','ū'=>'u',
+        'ñ'=>'n','ç'=>'c','ß'=>'ss','æ'=>'ae','œ'=>'oe',
+    ]);
+
+    // Apostrophes and punctuation should not push a name up or down the list.
+    return preg_replace('/[^a-z0-9 ]+/u', '', $folded) ?? $folded;
+}
+
+/** Sort a set of rows by name, the way a person reads an alphabetical list. */
+function sort_by_name(array $rows): array
+{
+    usort($rows, static fn(array $a, array $b): int =>
+        name_sort_key($a['name']) <=> name_sort_key($b['name']));
+
+    return $rows;
+}
+
+/**
  * All businesses shown on the public page, in the order chosen in the admin:
  * alphabetical by name, or the manual drag order.
  */
 function active_businesses(): array
 {
-    $order = setting('business_order') === 'manual'
-        ? 'sort_order ASC, name COLLATE NOCASE ASC'
-        : 'name COLLATE NOCASE ASC';
-
-    return db()->query(
-        'SELECT * FROM businesses WHERE is_active = 1 ORDER BY ' . $order
+    $rows = db()->query(
+        'SELECT * FROM businesses WHERE is_active = 1 ORDER BY sort_order ASC, name COLLATE NOCASE ASC'
     )->fetchAll();
+
+    return setting('business_order') === 'manual' ? $rows : sort_by_name($rows);
 }
 
 /** Distinct non-empty categories, for the filter chips. */
